@@ -105,10 +105,9 @@ def lasso_optimization():
     plt.plot(x, y_pred, label="Lasso")
 
 
-
 def main():
     # least_squares()
-    # gradient_descent()
+    gradient_descent()
     least_squares_features()
     lasso_optimization()
 
