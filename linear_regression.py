@@ -105,12 +105,63 @@ def lasso_optimization():
     plt.plot(x, y_pred, label="Lasso")
 
 
+def ridge_closed_form():
+    non_lin_x, non_lin_y = gen_non_lin()
+
+    A = feature_generator(non_lin_x)
+
+    n = np.shape(A)[0]
+    m = np.shape(A)[1]
+
+    regularization_term = 0.001
+    I = np.identity(m)
+
+    w = np.linalg.solve((A.conj().T @ A + regularization_term * I), A.conj().T @ non_lin_y)
+
+    x = np.linspace(0, 1, 100)
+
+    y_pred = feature_generator(x) @ w
+
+    plt.scatter(non_lin_x, non_lin_y, label="RidgeClosedForm(data)")
+    plt.plot(x, y_pred, label="RidgeClosedForm")
+
+
+def ridge_optimization():
+    non_lin_x, non_lin_y = gen_non_lin()
+
+    A = feature_generator(non_lin_x)
+
+    n = np.shape(A)[0]
+    m = np.shape(A)[1]
+    w_pred = np.random.random(m) - 0.5
+
+    learning_rate = 0.1
+    regularization_term = 0.01
+
+    L = (1 / n * np.sum((non_lin_y - A @ w_pred) ** 2)) + (regularization_term * np.sum(np.abs(w_pred)))
+
+    for _ in range(1000):
+
+        grad_L_w = 2 * regularization_term * w_pred
+        for i in range(n):
+            grad_L_w += 1 / n * (A[i, :] @ w_pred - non_lin_y[i]) * A[i, :]
+
+        w_pred = w_pred - learning_rate * grad_L_w
+
+    x = np.linspace(0, 1, 100)
+    y_pred = feature_generator(x) @ w_pred
+
+    plt.scatter(non_lin_x, non_lin_y, label="RidgeOptimization(data)")
+    plt.plot(x, y_pred, label="RidgeOptimization")
 def main():
     # least_squares()
-    gradient_descent()
+    # gradient_descent()
     least_squares_features()
-    lasso_optimization()
+    # lasso_optimization()
+    # ridge_closed_form()
+    ridge_optimization()
 
+    plt.ylim(0,2)
     plt.grid()
     plt.legend()
     plt.show()
