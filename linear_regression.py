@@ -153,6 +153,8 @@ def ridge_optimization():
 
     plt.scatter(non_lin_x, non_lin_y, label="RidgeOptimization(data)")
     plt.plot(x, y_pred, label="RidgeOptimization")
+
+
 def main():
     # least_squares()
     # gradient_descent()
